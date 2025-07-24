@@ -1,3 +1,5 @@
+import sys
+
 import pygame
 
 from constants import SCREEN_WIDTH, SCREEN_HEIGHT, ASTEROID_MIN_RADIUS, ASTEROID_KINDS, ASTEROID_SPAWN_RATE, ASTEROID_MAX_RADIUS
@@ -20,7 +22,7 @@ def main_loop(screen):
         # Should work??? Doesn't respond to my app close bind so I can't test :shrug:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.QUIT()
+                sys.exit(0)
 
         screen.fill("#000000")
         pygame.display.flip()
