@@ -5,7 +5,6 @@ from constants import SCREEN_WIDTH, SCREEN_HEIGHT, ASTEROID_MIN_RADIUS, ASTEROID
 
 def main():
     pygame_module_status = pygame.init()
-    signal.signal(signal.SIGQUIT, handle_sigquit)
     print(f"Successfully loaded {pygame_module_status[0]} pygame modules. {pygame_module_status[1]} modules failed to load.")
     print("Starting Asteroids!")
     print(f"Screen width: {SCREEN_WIDTH}")
@@ -15,15 +14,17 @@ def main():
     main_loop(screen)
 
 def main_loop(screen):
-    color = 0x000000
+    game_clock = pygame.time.Clock()
+    dt = 0
     while True:
-        # Should work??? Doesn't respond to SIGQUIT so I can't test :shrug:
+        # Should work??? Doesn't respond to my app close bind so I can't test :shrug:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.QUIT()
 
         screen.fill("#000000")
         pygame.display.flip()
+        dt = game_clock.tick(60) / 1000
 
 
 if __name__ == "__main__":
