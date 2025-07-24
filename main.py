@@ -17,19 +17,33 @@ def main():
     main_loop(screen)
 
 def main_loop(screen):
+
     game_clock = pygame.time.Clock()
     dt = 0
+
+    updateables = pygame.sprite.Group()
+    renderables = pygame.sprite.Group()
+
+    Player.containers = (updateables, renderables)
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+
     while True:
-        # Should work??? Doesn't respond to my app close bind so I can't test :shrug:
+        # Close the game when pygame detects a QUIT event. Doesn't work under some circumstances
+        # such as Hyprland's ctrl + q.
+        # TODO: Fix that considering I use Hyprland. Keyboard interrupts are a jank solution
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                #TODO: Probably replace this with return and do some cleaning up?
+                # TODO: Probably replace this with return and do some cleaning up?
                 sys.exit(0)
 
+        # TODO: Possibly split into "Update Sprites", "Update Screen", and "Render" methods?
         screen.fill("#000000")
-        player.update(dt)
-        player.draw(screen)
+
+        for updateable in updateables:
+            updateable.update(dt)
+        for renderable in renderables:
+            renderable.draw(screen)
+
         pygame.display.flip()
         dt = game_clock.tick(60) / 1000
 
