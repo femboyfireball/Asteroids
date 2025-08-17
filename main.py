@@ -2,9 +2,10 @@ import sys
 
 import pygame
 
-from constants import SCREEN_WIDTH, SCREEN_HEIGHT, ASTEROID_MIN_RADIUS, ASTEROID_KINDS, ASTEROID_SPAWN_RATE, ASTEROID_MAX_RADIUS
-from player import Player
-
+from constants     import SCREEN_WIDTH, SCREEN_HEIGHT, ASTEROID_MIN_RADIUS, ASTEROID_KINDS, ASTEROID_SPAWN_RATE, ASTEROID_MAX_RADIUS
+from player        import Player
+from asteroid      import Asteroid
+from asteroidfield import AsteroidField
 
 def main():
     pygame_module_status = pygame.init()
@@ -23,9 +24,15 @@ def main_loop(screen):
 
     updateables = pygame.sprite.Group()
     renderables = pygame.sprite.Group()
+    asteroids   = pygame.sprite.Group()
 
     Player.containers = (updateables, renderables)
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+
+    Asteroid.containers = (asteroids, renderables, updateables)
+
+    AsteroidField.containers = (updateables)
+    asteroid_field = AsteroidField()
 
     while True:
         # Close the game when pygame detects a QUIT event. Doesn't work under some circumstances
@@ -43,6 +50,10 @@ def main_loop(screen):
             updateable.update(dt)
         for renderable in renderables:
             renderable.draw(screen)
+        for asteroid in asteroids:
+            if asteroid.is_colliding(player):
+                print("Game Over!")
+                sys.exit(0)
 
         pygame.display.flip()
         dt = game_clock.tick(60) / 1000
